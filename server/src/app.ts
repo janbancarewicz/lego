@@ -3,17 +3,21 @@ import express, { Request, Response, NextFunction } from "express"
 import bodyParser from "body-parser"
 
 
-import setsRoutes  from "./routes/sets-routes"
-import brickBalanceRoutes  from"./routes/brick-balance-routes"
-import bricksRoutes  from"./routes/bricks-routes"
-import colorsRoutes  from"./routes/colors-routes"
-import authRoutes  from"./routes/auth"
+
+import setsRoutes from "./routes/sets-routes"
+import brickBalanceRoutes from "./routes/brick-balance-routes"
+import bricksRoutes from "./routes/bricks-routes"
+import colorsRoutes from "./routes/colors-routes"
+import authRoutes from "./routes/auth"
 import { NotFoundError } from "@janciow1979/common"
+
 
 
 dotenv.config();
 
 const app = express();
+
+
 
 app.use(bodyParser.json());
 app.use((req, res, next) => {
@@ -36,11 +40,11 @@ app.get("/api", (req, res) => {
   res.json({ message: "ok ok " });
 });
 
-app.use("/api/sets", setsRoutes);
-app.use("/api/brick-balance", brickBalanceRoutes);
 app.use("/api/bricks", bricksRoutes);
-app.use("/api/colors", colorsRoutes);
-app.use("/api/auth", authRoutes);
+// app.use("/api/sets", setsRoutes);
+// app.use("/api/brick-balance", brickBalanceRoutes);
+// app.use("/api/colors", colorsRoutes);
+// app.use("/api/auth", authRoutes);
 
 app.all('*', async (req, res, next) => {
   throw new NotFoundError();

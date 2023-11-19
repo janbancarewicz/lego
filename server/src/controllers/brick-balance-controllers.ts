@@ -1,14 +1,15 @@
 import express, { Request, Response, NextFunction } from 'express'
 
-import connection from "../db_connect"
+import pgClient from "../db_connect"
 import queryError from "../middleware/error"
 import bbQueryBuilder from "./query-utils/brick-balance"
 
 const getBrickBalanceBySet = (req: Request, res: Response, next: NextFunction) => {
   const setNumber = req.params.setNumber;
+  
   const q =
     "SELECT brick.img_pathname,  brick.model_id, lego_set_parts.quantity FROM lego_set_parts LEFT JOIN brick ON lego_set_parts.brick_id = brick.element_id WHERE lego_set_parts.lego_set_id = ? ORDER BY brick.description";
-  connection.query(q, [setNumber], function (err:any , results: any) {
+    pgClient.query(q, [setNumber], function (err:any , results: any) {
     if (err) queryError(err, res);
     const lego_set_brick_balance = results;
     res.status(200);
@@ -23,7 +24,7 @@ const getBrickBalanceBySetsGroup = (req: Request, res: Response, next: NextFunct
   const q =
     "SELECT brick.img_pathname,  brick.model_id, lego_set_parts.quantity FROM lego_set_parts LEFT JOIN brick ON lego_set_parts.brick_id = brick.element_id  WHERE lego_set_parts.lego_set_id = ? ORDER BY brick.description";
 
-  connection.query(`${q};${q}`, setsGroupArray, function (err: any, results: any) {
+    pgClient.query(`${q};${q}`, setsGroupArray, function (err: any, results: any) {
     if (err) queryError(err, res);
     const items1 = results[0];
     const items2 = results[1];
